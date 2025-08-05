@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Captulate - Instant Screen Calculations for macOS</title>
+    <title>Feathertouch Studio - Digital Craftsmanship</title>
     <style>
         * {
             margin: 0;
@@ -15,152 +15,108 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             line-height: 1.6;
             color: #333;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #f8f9fa;
             min-height: 100vh;
         }
         
-        .hero {
-            text-align: center;
-            padding: 80px 20px;
-            color: white;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
         }
         
-        .app-icon {
-            width: 120px;
-            height: 120px;
-            margin-bottom: 30px;
-            border-radius: 27px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        .header {
+            text-align: center;
+            margin-bottom: 80px;
         }
         
         h1 {
             font-size: 48px;
-            margin-bottom: 20px;
             font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 20px;
         }
         
         .tagline {
             font-size: 24px;
-            margin-bottom: 40px;
-            opacity: 0.9;
-        }
-        
-        .features {
-            max-width: 800px;
-            margin: 0 auto 60px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            padding: 0 20px;
-        }
-        
-        .feature {
-            background: rgba(255,255,255,0.1);
-            padding: 30px;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .feature h3 {
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
-        
-        .feature p {
-            opacity: 0.9;
-        }
-        
-        .beta-signup {
-            background: white;
-            max-width: 500px;
-            margin: 0 auto 40px;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
-            color: #333;
-        }
-        
-        .beta-signup h2 {
-            color: #667eea;
-            margin-bottom: 20px;
-        }
-        
-        .beta-signup p {
-            margin-bottom: 30px;
             color: #666;
+            margin-bottom: 40px;
         }
         
-        form {
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-bottom: 80px;
+        }
+        
+        .project-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        }
+        
+        .project-icon {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            border-radius: 18px;
+        }
+        
+        .project-title {
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #1a1a1a;
+        }
+        
+        .project-description {
+            font-size: 18px;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .coming-soon {
+            background: #f0f0f0;
+            border: 2px dashed #ddd;
+            text-align: center;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            align-items: center;
+            justify-content: center;
         }
         
-        input[type="email"] {
-            padding: 15px 20px;
-            font-size: 16px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            transition: border-color 0.3s;
-        }
-        
-        input[type="email"]:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-weight: 600;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-        }
-        
-        .success-message {
-            display: none;
-            background: #4caf50;
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
+        .coming-soon .project-title {
+            color: #999;
         }
         
         .footer {
             text-align: center;
             padding: 40px 20px;
-            color: white;
-            opacity: 0.8;
+            color: #666;
+            border-top: 1px solid #eee;
         }
         
         .footer a {
-            color: white;
+            color: #666;
             text-decoration: none;
             margin: 0 15px;
         }
         
         .footer a:hover {
-            text-decoration: underline;
+            color: #333;
         }
         
-        .demo-gif {
-            max-width: 600px;
-            width: 100%;
-            margin: 40px auto;
-            display: block;
-            border-radius: 10px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-        
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             h1 {
                 font-size: 36px;
             }
@@ -172,61 +128,29 @@
     <script defer src="https://cloud.umami.is/script.js" data-website-id="c87621ea-5af0-4e0e-a9ce-6d62ee052fbf"></script>
 </head>
 <body>
-    <div class="hero">
-        <img src="https://raw.githubusercontent.com/bharath2020/captulate/main/Captulate/Captulate/Assets.xcassets/AppIcon.appiconset/icon_512x512.png" alt="Captulate Icon" class="app-icon">
-        <h1>Captulate</h1>
-        <p class="tagline">Instant calculations from any screen content</p>
+    <div class="container">
+        <div class="header">
+            <h1>Feathertouch Studio</h1>
+            <p class="tagline">Crafting delightful digital experiences</p>
+        </div>
         
-        <div class="features">
-            <div class="feature">
-                <h3>⌘ Quick Capture</h3>
-                <p>Press Cmd+Shift+C to instantly select and calculate</p>
-            </div>
-            <div class="feature">
-                <h3>🔢 Smart Recognition</h3>
-                <p>Advanced OCR extracts numbers from any application</p>
-            </div>
-            <div class="feature">
-                <h3>🚀 Lightning Fast</h3>
-                <p>Results appear instantly, no waiting</p>
+        <div class="projects">
+            <a href="/captulate/" class="project-card">
+                <img src="https://raw.githubusercontent.com/bharath2020/captulate/main/Captulate/Captulate/Assets.xcassets/AppIcon.appiconset/icon_512x512.png" alt="Captulate Icon" class="project-icon">
+                <h2 class="project-title">Captulate</h2>
+                <p class="project-description">Instant calculations from any screen content. A macOS app that lets you select and calculate numbers from anywhere on your screen.</p>
+            </a>
+            
+            <div class="project-card coming-soon">
+                <h2 class="project-title">More Coming Soon</h2>
+                <p class="project-description">We're working on exciting new projects. Stay tuned!</p>
             </div>
         </div>
         
-        <div class="beta-signup">
-            <h2>Join the Beta</h2>
-            <p>Be among the first to experience Captulate. Sign up for TestFlight beta access!</p>
-            
-            <form id="betaForm">
-                <input type="email" id="emailInput" placeholder="Enter your email" required>
-                <button type="submit">Join Beta</button>
-            </form>
-            
-            <div class="success-message" id="successMessage">
-                Thanks! We'll send you a TestFlight invite soon.
-            </div>
+        <div class="footer">
+            <a href="mailto:bharath.feathertouch@gmail.com">Contact</a>
+            <a href="https://github.com/bharath2020">GitHub</a>
         </div>
     </div>
-    
-    <div class="footer">
-        <a href="privacy.html">Privacy Policy</a>
-        <a href="support.html">Support</a>
-        <a href="mailto:bharath.feathertouch@gmail.com">Contact</a>
-    </div>
-    
-    <script>
-        document.getElementById('betaForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('emailInput').value;
-            const subject = 'Captulate Beta Signup';
-            const body = `New beta signup request from: ${email}`;
-            
-            // Open email client with pre-filled information
-            window.location.href = `mailto:bharath.feathertouch@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            
-            // Show success message
-            document.getElementById('successMessage').style.display = 'block';
-            this.style.display = 'none';
-        });
-    </script>
 </body>
 </html>

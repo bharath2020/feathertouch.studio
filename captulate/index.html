@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captulate - Instant Screen Calculations for macOS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            color: white;
+        }
+        
+        .app-icon {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 30px;
+            border-radius: 27px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .tagline {
+            font-size: 24px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+        
+        .features {
+            max-width: 800px;
+            margin: 0 auto 60px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            padding: 0 20px;
+        }
+        
+        .feature {
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .feature h3 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .feature p {
+            opacity: 0.9;
+        }
+        
+        .beta-signup {
+            background: white;
+            max-width: 500px;
+            margin: 0 auto 40px;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+            color: #333;
+        }
+        
+        .beta-signup h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .beta-signup p {
+            margin-bottom: 30px;
+            color: #666;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        input[type="email"] {
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="email"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+        }
+        
+        .success-message {
+            display: none;
+            background: #4caf50;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: white;
+            opacity: 0.8;
+        }
+        
+        .footer a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .demo-gif {
+            max-width: 600px;
+            width: 100%;
+            margin: 40px auto;
+            display: block;
+            border-radius: 10px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 36px;
+            }
+            .tagline {
+                font-size: 20px;
+            }
+        }
+    </style>
+    <script defer src="https://cloud.umami.is/script.js" data-website-id="c87621ea-5af0-4e0e-a9ce-6d62ee052fbf"></script>
+</head>
+<body>
+    <div class="hero">
+        <img src="https://raw.githubusercontent.com/bharath2020/captulate/main/Captulate/Captulate/Assets.xcassets/AppIcon.appiconset/icon_512x512.png" alt="Captulate Icon" class="app-icon">
+        <h1>Captulate</h1>
+        <p class="tagline">Instant calculations from any screen content</p>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>⌘ Quick Capture</h3>
+                <p>Press Cmd+Shift+C to instantly select and calculate</p>
+            </div>
+            <div class="feature">
+                <h3>🔢 Smart Recognition</h3>
+                <p>Advanced OCR extracts numbers from any application</p>
+            </div>
+            <div class="feature">
+                <h3>🚀 Lightning Fast</h3>
+                <p>Results appear instantly, no waiting</p>
+            </div>
+        </div>
+        
+        <div class="beta-signup">
+            <h2>Join the Beta</h2>
+            <p>Be among the first to experience Captulate. Sign up for TestFlight beta access!</p>
+            
+            <form id="betaForm">
+                <input type="email" id="emailInput" placeholder="Enter your email" required>
+                <button type="submit">Join Beta</button>
+            </form>
+            
+            <div class="success-message" id="successMessage">
+                Thanks! We'll send you a TestFlight invite soon.
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="support.html">Support</a>
+        <a href="mailto:bharath.feathertouch@gmail.com">Contact</a>
+    </div>
+    
+    <script>
+        document.getElementById('betaForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value;
+            const subject = 'Captulate Beta Signup';
+            const body = `New beta signup request from: ${email}`;
+            
+            // Open email client with pre-filled information
+            window.location.href = `mailto:bharath.feathertouch@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            
+            // Show success message
+            document.getElementById('successMessage').style.display = 'block';
+            this.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
