@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captulate - Capture. Calculate. Copy.</title>
+    <link rel="icon" type="image/png" href="captulate-icon.png">
+    <style>
+        :root {
+            /* Ocean Theme Colors from present package */
+            --primary-blue: #004099;
+            --accent-blue: #4db3ff;
+            --success-green: #00804d;
+            --warning-orange: #b34d00;
+            --dark-bg: rgba(0, 0, 0, 0.7);
+            --light-bg: #f5f7fc;
+            --text-primary: rgba(0, 0, 0, 0.9);
+            --text-secondary: #4d5966;
+            --border-color: #d9dee6;
+            --gradient-1: linear-gradient(135deg, #004099 0%, #4db3ff 100%);
+            --gradient-2: linear-gradient(135deg, #00804d 0%, #00cc80 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-primary);
+            background: linear-gradient(180deg, #ffffff 0%, var(--light-bg) 100%);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled {
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-blue);
+        }
+
+        .cta-button {
+            background: var(--gradient-1);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 64, 153, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 5rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(77, 179, 255, 0.1) 0%, transparent 70%);
+            animation: pulse 15s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.3; }
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-tagline {
+            font-size: 1.25rem;
+            color: var(--primary-blue);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+
+        .primary-button {
+            background: var(--gradient-1);
+            color: white;
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .primary-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0, 64, 153, 0.4);
+        }
+
+        .secondary-button {
+            background: white;
+            color: var(--primary-blue);
+            padding: 1rem 2.5rem;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border: 2px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .secondary-button:hover {
+            border-color: var(--primary-blue);
+            background: var(--light-bg);
+        }
+
+        /* Demo Section */
+        .demo-section {
+            padding: 5rem 2rem;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 4rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 3rem;
+        }
+
+        .demo-card {
+            background: var(--light-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .demo-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+        }
+
+        .demo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-1);
+        }
+
+        .demo-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.5rem;
+        }
+
+        .demo-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+        }
+
+        .demo-description {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+        }
+
+        .demo-preview {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'SF Mono', Monaco, monospace;
+            font-size: 0.9rem;
+            color: var(--primary-blue);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .calculation-animation {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .calc-step {
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid var(--border-color);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeInScale 0.5s ease-out forwards;
+        }
+
+        .calc-step:nth-child(1) { animation-delay: 0.2s; }
+        .calc-step:nth-child(3) { animation-delay: 0.6s; }
+        .calc-step:nth-child(5) { animation-delay: 1s; }
+
+        @keyframes fadeInScale {
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+        }
+
+        .calc-arrow {
+            color: var(--accent-blue);
+            font-size: 1.5rem;
+            opacity: 0;
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+
+        .calc-arrow:nth-child(2) { animation-delay: 0.4s; }
+        .calc-arrow:nth-child(4) { animation-delay: 0.8s; }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Features Section */
+        .features-section {
+            padding: 5rem 2rem;
+            background: var(--light-bg);
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            border-color: var(--accent-blue);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Privacy Section */
+        .privacy-section {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, rgba(0, 64, 153, 0.9) 100%);
+            color: white;
+            text-align: center;
+        }
+
+        .privacy-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .privacy-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            margin-bottom: 2rem;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .privacy-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+        }
+
+        .privacy-description {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            opacity: 0.95;
+        }
+
+        /* TestFlight Section */
+        .testflight-section {
+            padding: 5rem 2rem;
+            background: white;
+        }
+
+        .testflight-content {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .signup-form {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .email-input {
+            flex: 1;
+            min-width: 300px;
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .email-input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(0, 64, 153, 0.1);
+        }
+
+        .submit-button {
+            background: var(--gradient-2);
+            color: white;
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 128, 77, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            padding: 3rem 2rem;
+            background: var(--dark-bg);
+            color: white;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .footer-logo img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .footer-text {
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .footer-link:hover {
+            opacity: 1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .demo-container {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header" id="header">
+        <nav class="nav-container">
+            <a href="#" class="logo">
+                <img src="captulate-icon.png" alt="Captulate">
+                <span class="logo-text">Captulate</span>
+            </a>
+            <div class="nav-links">
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#demo" class="nav-link">How it Works</a>
+                <a href="#privacy" class="nav-link">Privacy</a>
+                <a href="#testflight" class="cta-button">Join TestFlight</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-tagline">Capture. Calculate. Copy.</div>
+            <h1 class="hero-title">Calculate Anything On Your Screen</h1>
+            <p class="hero-subtitle">Skip the copy-paste circus. Select any numbers on screen and get instant calculations. Built for traders, analysts, and number crunchers.</p>
+            <div class="hero-actions">
+                <a href="#" class="primary-button">
+                    <span>Coming to Mac App Store</span>
+                    <span>→</span>
+                </a>
+                <a href="#testflight" class="secondary-button">Get Early Access</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Demo Section -->
+    <section class="demo-section" id="demo">
+        <h2 class="section-title">Real-World Calculations, Real Fast</h2>
+        <p class="section-subtitle">Three clicks. That's all it takes to go from seeing numbers to having answers.</p>
+        
+        <div class="demo-container">
+            <!-- Trading Demo -->
+            <div class="demo-card">
+                <div class="demo-icon">📈</div>
+                <h3 class="demo-title">Trading Activity</h3>
+                <p class="demo-description">Quickly sum up gains and losses from your trading dashboard. No spreadsheet needed.</p>
+                <div class="demo-preview">
+                    <div class="calculation-animation">
+                        <span class="calc-step">Capture</span>
+                        <span class="calc-arrow">→</span>
+                        <span class="calc-step">Calculate</span>
+                        <span class="calc-arrow">→</span>
+                        <span class="calc-step">Copy</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Banking Demo -->
+            <div class="demo-card">
+                <div class="demo-icon">💳</div>
+                <h3 class="demo-title">Monthly Spending</h3>
+                <p class="demo-description">See your Amazon charges? Select them all, get average spending instantly.</p>
+                <div class="demo-preview">
+                    <div class="calculation-animation">
+                        <span class="calc-step">Capture</span>
+                        <span class="calc-arrow">→</span>
+                        <span class="calc-step">Calculate</span>
+                        <span class="calc-arrow">→</span>
+                        <span class="calc-step">Copy</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File Size Demo -->
+            <div class="demo-card">
+                <div class="demo-icon">📁</div>
+                <h3 class="demo-title">Storage Math</h3>
+                <p class="demo-description">Calculate total folder sizes in Finder. Perfect for cleanup decisions.</p>
+                <div class="demo-preview">
+                    <div class="calculation-animation">
+                        <span class="calc-step">Capture</span>
+                        <span class="calc-arrow">→</span>
+                        <span class="calc-step">Calculate</span>
+                        <span class="calc-arrow">→</span>
+                        <span class="calc-step">Copy</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-section" id="features">
+        <h2 class="section-title">Built for Financial Professionals</h2>
+        <p class="section-subtitle">Every feature designed to save you time and clicks</p>
+        
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">Instant OCR</h3>
+                <p class="feature-description">Advanced text recognition captures numbers from any app, PDF, or image</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title">Smart Selection</h3>
+                <p class="feature-description">Visual preview shows exactly what you're calculating before you commit</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⌨️</div>
+                <h3 class="feature-title">Global Hotkey</h3>
+                <p class="feature-description">Command+Shift+C from anywhere. No app switching needed</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Multiple Operations</h3>
+                <p class="feature-description">Sum, average, count, min, max - all the calculations you need</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3 class="feature-title">Currency Support</h3>
+                <p class="feature-description">Handles currency symbols and percentages intelligently</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3 class="feature-title">Quick Copy</h3>
+                <p class="feature-description">Results copied to clipboard instantly for pasting anywhere</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Privacy Section -->
+    <section class="privacy-section" id="privacy">
+        <div class="privacy-content">
+            <div class="privacy-badge">
+                <span>🔒</span>
+                <span>100% Private & Offline</span>
+            </div>
+            <h2 class="privacy-title">Your Numbers Stay Yours</h2>
+            <p class="privacy-description">
+                No cloud. No servers. No tracking. All calculations happen locally on your Mac. 
+                Perfect for sensitive financial data, confidential reports, and private documents. 
+                Your calculations are yours alone.
+            </p>
+        </div>
+    </section>
+
+    <!-- TestFlight Section -->
+    <section class="testflight-section" id="testflight">
+        <div class="testflight-content">
+            <h2 class="section-title">Get Early Access</h2>
+            <p class="section-subtitle">Join our TestFlight and be among the first to experience the future of on-screen calculations</p>
+            
+            <form class="signup-form" id="testflightForm">
+                <input type="email" class="email-input" placeholder="Enter your email" required>
+                <button type="submit" class="submit-button">Join TestFlight</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <img src="captulate-icon.png" alt="Captulate">
+                <span class="logo-text">Captulate</span>
+            </div>
+            <p class="footer-text">Capture. Calculate. Copy. The smart calculator for your Mac.</p>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+                <a href="mailto:support@captulate.app" class="footer-link">Contact</a>
+            </div>
+            <p class="footer-text" style="margin-top: 2rem; opacity: 0.6;">© 2025 Captulate. Made with precision for macOS.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // TestFlight form submission
+        document.getElementById('testflightForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input[type="email"]').value;
+            // Here you would typically send this to your backend
+            alert(`Thanks for your interest! We'll notify ${email} when TestFlight opens.`);
+            this.reset();
+        });
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe feature cards and demo cards
+        document.querySelectorAll('.feature-card, .demo-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

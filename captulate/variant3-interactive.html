@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captulate - Interactive Calculator for macOS</title>
+    <link rel="icon" type="image/png" href="captulate-icon.png">
+    <style>
+        :root {
+            /* Arctic Theme Colors */
+            --bg-primary: #050810;
+            --bg-secondary: #0b0e11;
+            --accent-blue: #2563eb;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --border: rgba(255, 255, 255, 0.1);
+            --gradient-blue: linear-gradient(135deg, #2563eb 0%, #06b6d4 100%);
+            --gradient-purple: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        /* Particle Background */
+        #particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            opacity: 0;
+            animation: particle-float 20s infinite;
+        }
+
+        @keyframes particle-float {
+            0% {
+                opacity: 0;
+                transform: translateY(100vh) scale(0);
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-100vh) scale(1.5);
+            }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 1.5rem 3rem;
+            background: rgba(5, 8, 16, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+
+        .logo img {
+            width: 45px;
+            height: 45px;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .logo-text {
+            font-size: 1.75rem;
+            font-weight: 700;
+            background: var(--gradient-blue);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Hero with Interactive Demo */
+        .hero {
+            margin-top: 100px;
+            padding: 4rem 3rem;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            max-width: 1300px;
+            margin: 0 auto;
+            align-items: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-blue);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-tagline {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid var(--accent-blue);
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            margin-bottom: 2rem;
+        }
+
+        .pulse {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+        }
+
+        .hero-description {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        /* Interactive Calculator Demo */
+        .interactive-demo {
+            background: rgba(11, 14, 17, 0.5);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .demo-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .demo-dot:nth-child(1) { background: #ef4444; }
+        .demo-dot:nth-child(2) { background: #eab308; }
+        .demo-dot:nth-child(3) { background: #22c55e; }
+
+        .demo-screen {
+            background: rgba(5, 8, 16, 0.8);
+            border-radius: 10px;
+            padding: 2rem;
+            min-height: 300px;
+            position: relative;
+        }
+
+        .demo-numbers {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .demo-number {
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 1.25rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-number::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: var(--accent-blue);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .demo-number:hover::before {
+            width: 100%;
+            height: 100%;
+        }
+
+        .demo-number:hover {
+            color: white;
+            transform: scale(1.05);
+            border-color: var(--accent-blue);
+        }
+
+        .demo-number span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .demo-result {
+            background: var(--gradient-blue);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 700;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideUp 0.5s ease-out forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .demo-btn {
+            flex: 1;
+            padding: 1rem;
+            background: rgba(37, 99, 235, 0.1);
+            border: 1px solid var(--accent-blue);
+            border-radius: 10px;
+            color: var(--accent-blue);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .demo-btn:hover {
+            background: var(--accent-blue);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Features with Hover Effects */
+        .features {
+            padding: 6rem 3rem;
+            background: var(--bg-secondary);
+        }
+
+        .features-grid {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: rgba(5, 8, 16, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent-blue);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.2);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-blue);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Privacy Section with Animation */
+        .privacy {
+            padding: 6rem 3rem;
+            background: var(--bg-primary);
+            text-align: center;
+            position: relative;
+        }
+
+        .privacy-container {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .privacy-shield {
+            font-size: 5rem;
+            margin-bottom: 2rem;
+            animation: shield-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes shield-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .privacy-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-purple);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .privacy-text {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .privacy-badges {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 3rem;
+        }
+
+        .privacy-badge {
+            background: rgba(139, 92, 246, 0.1);
+            border: 1px solid var(--accent-purple);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            color: var(--accent-purple);
+        }
+
+        /* TestFlight with Animation */
+        .testflight {
+            padding: 6rem 3rem;
+            background: var(--bg-secondary);
+        }
+
+        .testflight-container {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .testflight-title {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: var(--gradient-blue);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .testflight-form {
+            display: flex;
+            gap: 1rem;
+            margin-top: 3rem;
+            position: relative;
+        }
+
+        .form-input {
+            flex: 1;
+            padding: 1.25rem 2rem;
+            background: rgba(5, 8, 16, 0.5);
+            border: 2px solid var(--border);
+            border-radius: 50px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--accent-blue);
+            background: rgba(5, 8, 16, 0.8);
+            box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+        }
+
+        .form-submit {
+            padding: 1.25rem 3rem;
+            background: var(--gradient-blue);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-submit::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .form-submit:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .form-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.4);
+        }
+
+        /* Floating Elements */
+        .float-element {
+            position: absolute;
+            opacity: 0.1;
+            animation: float-around 20s ease-in-out infinite;
+        }
+
+        @keyframes float-around {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(100px, -100px) rotate(90deg); }
+            50% { transform: translate(-50px, -200px) rotate(180deg); }
+            75% { transform: translate(-100px, -50px) rotate(270deg); }
+        }
+
+        /* Footer */
+        .footer {
+            padding: 3rem;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-grid { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.5rem; }
+            .demo-numbers { grid-template-columns: repeat(2, 1fr); }
+            .testflight-form { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particle Background -->
+    <div id="particles"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <a href="#" class="logo">
+                <img src="captulate-icon.png" alt="Captulate">
+                <span class="logo-text">Captulate</span>
+            </a>
+        </nav>
+    </header>
+
+    <!-- Hero with Interactive Demo -->
+    <section class="hero">
+        <div class="hero-grid">
+            <div class="hero-content">
+                <div class="hero-tagline">
+                    <span class="pulse"></span>
+                    <span>CAPTURE • CALCULATE • COPY</span>
+                </div>
+                <h1>The Calculator That Sees Your Screen</h1>
+                <p class="hero-description">
+                    Stop the copy-paste madness. Captulate instantly captures and calculates any numbers on your screen. 
+                    Built for traders, analysts, and professionals who work with numbers all day.
+                </p>
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <a href="#" class="demo-btn" style="display: inline-block; text-decoration: none;">Mac App Store</a>
+                    <a href="#testflight" class="demo-btn" style="display: inline-block; text-decoration: none;">Join Beta</a>
+                </div>
+            </div>
+
+            <div class="interactive-demo">
+                <div class="demo-header">
+                    <span class="demo-dot"></span>
+                    <span class="demo-dot"></span>
+                    <span class="demo-dot"></span>
+                </div>
+                <div class="demo-screen">
+                    <div class="demo-numbers">
+                        <div class="demo-number"><span>$1,247</span></div>
+                        <div class="demo-number"><span>$3,892</span></div>
+                        <div class="demo-number"><span>$756</span></div>
+                        <div class="demo-number"><span>$2,145</span></div>
+                        <div class="demo-number"><span>$923</span></div>
+                        <div class="demo-number"><span>$4,321</span></div>
+                    </div>
+                    <div class="demo-result">
+                        Total: $13,284
+                    </div>
+                    <div class="demo-controls">
+                        <button class="demo-btn" onclick="animateCalc('sum')">Sum</button>
+                        <button class="demo-btn" onclick="animateCalc('avg')">Average</button>
+                        <button class="demo-btn" onclick="animateCalc('max')">Max</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features" id="features">
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">Lightning Fast OCR</h3>
+                <p class="feature-description">Advanced text recognition captures numbers from any app, PDF, or image in milliseconds</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🎯</div>
+                <h3 class="feature-title">Smart Selection</h3>
+                <p class="feature-description">Visual preview shows exactly what you're calculating before you commit</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">⌨️</div>
+                <h3 class="feature-title">Global Hotkey</h3>
+                <p class="feature-description">Command+Shift+C from anywhere. No app switching needed</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">All Operations</h3>
+                <p class="feature-description">Sum, average, count, min, max - every calculation you need</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3 class="feature-title">Currency Smart</h3>
+                <p class="feature-description">Handles currency symbols and percentages intelligently</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔄</div>
+                <h3 class="feature-title">Instant Copy</h3>
+                <p class="feature-description">Results copied to clipboard instantly for pasting anywhere</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Privacy -->
+    <section class="privacy" id="privacy">
+        <div class="privacy-container">
+            <div class="privacy-shield">🛡️</div>
+            <h2 class="privacy-title">Your Data Never Leaves Your Mac</h2>
+            <p class="privacy-text">
+                100% offline processing. No cloud servers. No analytics. No tracking. 
+                Perfect for confidential financial data and sensitive calculations.
+            </p>
+            <div class="privacy-badges">
+                <span class="privacy-badge">🔒 Encrypted</span>
+                <span class="privacy-badge">🏠 Local Only</span>
+                <span class="privacy-badge">🚫 No Tracking</span>
+            </div>
+        </div>
+        <div class="float-element" style="top: 10%; left: 10%; font-size: 3rem;">🔐</div>
+        <div class="float-element" style="top: 20%; right: 15%; font-size: 2.5rem;">🛡️</div>
+        <div class="float-element" style="bottom: 20%; left: 20%; font-size: 2rem;">🔒</div>
+    </section>
+
+    <!-- TestFlight -->
+    <section class="testflight" id="testflight">
+        <div class="testflight-container">
+            <h2 class="testflight-title">Join the Beta</h2>
+            <p style="font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2rem;">
+                Be among the first to experience the future of on-screen calculations
+            </p>
+            
+            <form class="testflight-form" id="testflightForm">
+                <input type="email" class="form-input" placeholder="your@email.com" required>
+                <button type="submit" class="form-submit">Get Access</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p style="color: var(--text-secondary);">© 2025 Captulate. Precision tools for macOS.</p>
+    </footer>
+
+    <script>
+        // Create particles
+        const particlesContainer = document.getElementById('particles');
+        for (let i = 0; i < 50; i++) {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 20 + 's';
+            particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+            particlesContainer.appendChild(particle);
+        }
+
+        // Interactive demo
+        let selectedNumbers = [];
+        document.querySelectorAll('.demo-number').forEach(num => {
+            num.addEventListener('click', function() {
+                this.classList.toggle('selected');
+                this.style.background = this.classList.contains('selected') ? 
+                    'var(--accent-blue)' : 'rgba(37, 99, 235, 0.1)';
+            });
+        });
+
+        function animateCalc(type) {
+            const result = document.querySelector('.demo-result');
+            result.style.animation = 'none';
+            setTimeout(() => {
+                result.style.animation = 'slideUp 0.5s ease-out forwards';
+                if (type === 'sum') result.textContent = 'Total: $13,284';
+                if (type === 'avg') result.textContent = 'Average: $2,214';
+                if (type === 'max') result.textContent = 'Maximum: $4,321';
+            }, 10);
+        }
+
+        // Form submission
+        document.getElementById('testflightForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input').value;
+            alert(`Welcome! We'll send TestFlight access to ${email} soon.`);
+            this.reset();
+        });
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
