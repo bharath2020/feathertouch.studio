@@ -253,12 +253,74 @@
             animation: fadeInUp 0.8s ease-out 0.8s both;
         }
 
-        .app-preview img {
+        .app-preview-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .preview-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .preview-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+        }
+
+        .preview-item img {
             width: 100%;
-            max-width: 800px;
             height: auto;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            display: block;
+        }
+
+        .preview-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            color: white;
+            padding: 1.5rem;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .preview-item:hover .preview-caption {
+            transform: translateY(0);
+        }
+
+        .preview-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .preview-description {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Main preview - larger */
+        .preview-item.main {
+            grid-column: 1 / -1;
+        }
+
+        @media (max-width: 768px) {
+            .app-preview-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .preview-item.main {
+                grid-column: 1;
+            }
         }
 
         /* Features Section */
@@ -719,7 +781,36 @@
                 <a href="#how-it-works" class="btn-secondary">Watch Demo</a>
             </div>
             <div class="app-preview">
-                <img src="app-preview.gif" alt="Captulate App Demo">
+                <div class="app-preview-grid">
+                    <div class="preview-item main">
+                        <img src="app-preview-main.gif" alt="Captulate Main Demo">
+                        <div class="preview-caption">
+                            <div class="preview-title">Complete Workflow</div>
+                            <div class="preview-description">See the full capture, calculate, and copy process in action</div>
+                        </div>
+                    </div>
+                    <div class="preview-item">
+                        <img src="app-preview-pdf.gif" alt="PDF Calculation Demo">
+                        <div class="preview-caption">
+                            <div class="preview-title">PDF Reports</div>
+                            <div class="preview-description">Extract and sum numbers from financial PDFs instantly</div>
+                        </div>
+                    </div>
+                    <div class="preview-item">
+                        <img src="app-preview-spreadsheet.gif" alt="Spreadsheet Demo">
+                        <div class="preview-caption">
+                            <div class="preview-title">Quick Calculations</div>
+                            <div class="preview-description">Calculate totals from any spreadsheet or table</div>
+                        </div>
+                    </div>
+                    <div class="preview-item">
+                        <img src="app-preview-chart.gif" alt="Chart Data Demo">
+                        <div class="preview-caption">
+                            <div class="preview-title">Chart Analysis</div>
+                            <div class="preview-description">Extract data points from graphs and charts</div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
